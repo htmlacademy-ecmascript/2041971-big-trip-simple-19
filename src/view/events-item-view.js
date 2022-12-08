@@ -1,18 +1,29 @@
 import {createElement} from '../render.js';
+import {humanizePointDate, humanizePointTime} from '../utils.js';
 
-function createPointTemplate() {
+function createPointTemplate(point) {
+  const {dateFrom, dateTo} = point;
+
+  const date = dateFrom !== null
+    ? humanizePointDate(dateFrom)
+    : 'la';
+
+  const generateTime = (time) => time !== null
+    ? humanizePointTime(time)
+    : 'la';
+
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">MAR 18</time>
+      <time class="event__date" datetime="${dateFrom}">${date}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
       </div>
       <h3 class="event__title">Taxi Amsterdam</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+          <time class="event__start-time" datetime="${dateFrom}">${generateTime(dateFrom)}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+          <time class="event__end-time" datetime="${dateTo}">${generateTime(dateTo)}</time>
         </p>
       </div>
       <p class="event__price">
@@ -34,8 +45,12 @@ function createPointTemplate() {
 }
 
 export default class EventsItemView {
+  constructor(point) {
+    this.point = point;
+  }
+
   getTemplate() {
-    return createPointTemplate();
+    return createPointTemplate(this.point);
   }
 
   getElement() {
