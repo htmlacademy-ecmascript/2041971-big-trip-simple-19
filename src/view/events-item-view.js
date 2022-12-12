@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
-import {humanizePointDate, humanizePointTime} from '../utils.js';
-
+import {humanizePointDate} from '../utils.js';
+import {DateFormat} from '../const.js';
 
 const createOffers = (offers, offersModel) => {
   const carrentOffers = offers.map((id) => offersModel.offers.find((offer) => id === offer.id));
@@ -12,25 +12,25 @@ const createOffers = (offers, offersModel) => {
    </li>` : '').join('');
 };
 
-function createPointTemplate(point, offersModel, destination) {
+const createPointTemplate = (point, offersModel, destination) => {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
 
-  const date = humanizePointDate(dateFrom);
-
-  const generateTime = (time) => humanizePointTime(time);
+  const date = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
+  const timeFrom = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
+  const timeTo = humanizePointDate(dateTo, DateFormat.TIME_FORMAT);
 
   return `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${dateFrom}">${date}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${dateFrom}">${generateTime(dateFrom)}</time>
+          <time class="event__start-time" datetime="${dateFrom}">${timeFrom}</time>
           &mdash;
-          <time class="event__end-time" datetime="${dateTo}">${generateTime(dateTo)}</time>
+          <time class="event__end-time" datetime="${dateTo}">${timeTo}</time>
         </p>
       </div>
       <p class="event__price">
@@ -43,7 +43,7 @@ function createPointTemplate(point, offersModel, destination) {
       </button>
     </div>
   </li>`;
-}
+};
 
 export default class EventsItemView {
   constructor({point, offers, destination}) {

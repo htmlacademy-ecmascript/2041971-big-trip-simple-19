@@ -21,5 +21,22 @@ const OFFER_TITLES = ['Order Uber', 'Add luggage', 'Switch to comfort', 'Rent a 
 const TIPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
 const TASK_COUNT = 12;
+const PRICE_COEFFICIENT = 10;
 
-export {DESCRIPTIONS, NAMES, PICTURE_SRC, OFFER_TITLES, TIPES, TASK_COUNT};
+const BLANK_POINT = {
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
+  destination: {},
+  offers: [],
+  type: '',
+};
+
+const DateFormat = {
+  DATE_FORMAT: 'MMM D',
+  TIME_FORMAT: 'hh:mm',
+  FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
+};
+
+
+export {DESCRIPTIONS, NAMES, PICTURE_SRC, OFFER_TITLES, TIPES, TASK_COUNT, BLANK_POINT, DateFormat, PRICE_COEFFICIENT};

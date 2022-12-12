@@ -1,12 +1,12 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils.js';
-import {OFFER_TITLES, TIPES} from '../const.js';
+import {OFFER_TITLES, TIPES, PRICE_COEFFICIENT} from '../const.js';
 
 const generateTitle = () => getRandomArrayElement(OFFER_TITLES);
 
 const generateOffer = (id) => ({
   id,
   title: generateTitle(),
-  price: getRandomInteger(1, 10) * 10,
+  price: getRandomInteger(1, PRICE_COEFFICIENT) * PRICE_COEFFICIENT,
 });
 
 const generateOffers = () => {

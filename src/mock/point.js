@@ -1,8 +1,9 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils.js';
-import {TIPES} from '../const.js';
+import {TIPES, PRICE_COEFFICIENT} from '../const.js';
 import dayjs from 'dayjs';
 
-const generatePrice = () => getRandomInteger(1, 100) * 10;
+const generatePrice = () => getRandomInteger(1, PRICE_COEFFICIENT) * PRICE_COEFFICIENT;
+
 const generateFromToDates = () => {
   const MAX_GAP = 14;
   const fromDate = dayjs()
