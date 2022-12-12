@@ -7,7 +7,11 @@ const tripFiltersElement = document.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel();
-const boardPresenter = new BoardPresenter({boardContainer: tripEventsElement, pointsModel});
+console.log(pointsModel);
+const boardPresenter = new BoardPresenter({
+  boardContainer: tripEventsElement,
+  pointsModel,
+});
 
 render(new FilterView(), tripFiltersElement);
 

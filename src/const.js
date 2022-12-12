@@ -18,4 +18,8 @@ const PICTURE_SRC = 'http://picsum.photos/300/200?r=';
 
 const OFFER_TITLES = ['Order Uber', 'Add luggage', 'Switch to comfort', 'Rent a car', 'Add breakfast', 'Book tickets', 'Lunch in city',];
 
-export {DESCRIPTIONS, NAMES, PICTURE_SRC, OFFER_TITLES};
+const TIPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+
+const TASK_COUNT = 12;
+
+export {DESCRIPTIONS, NAMES, PICTURE_SRC, OFFER_TITLES, TIPES, TASK_COUNT};

@@ -1,5 +1,6 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils.js';
 import {DESCRIPTIONS, NAMES, PICTURE_SRC} from '../const.js';
+import {TASK_COUNT} from '../const.js';
 
 const generateDescription = () => {
   const carentDescription = [];
@@ -18,9 +19,11 @@ const generatePictures = () => {
   return Array.from({length: getRandomInteger()}, generatePicture);
 };
 
-export const generateDestination = () => ({
-  'id': getRandomInteger(),
-  'description': generateDescription(),
-  'name': generateName(),
-  'pictures': generatePictures(),
+const generateDestination = (id) => ({
+  id,
+  description: generateDescription(),
+  name: generateName(),
+  pictures: generatePictures(),
 });
+
+export const generateDestinations = () => Array.from({length: TASK_COUNT}, (_item, index) => generateDestination(index + 1));
