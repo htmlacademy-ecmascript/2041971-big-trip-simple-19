@@ -3,12 +3,13 @@ import EventsListView from '../view/events-list-view.js';
 import NewPointView from '../view/new-point-view.js';
 import SortView from '../view/list-sort-view.js';
 import {render} from '../render.js';
-
+import EmptyListView from '../view/list-empty-view.js';
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
 
   #boardComponent = new EventsListView();
+  #sortView = new SortView();
 
   #boardPoints = [];
   #boardOffers = [];
@@ -24,12 +25,7 @@ export default class BoardPresenter {
     this.#boardOffers = [...this.#pointsModel.offers];
     this.#boardDestination = [...this.#pointsModel.destination];
 
-    render(new SortView(), this.#boardContainer);
-    render(this.#boardComponent, this.#boardContainer);
-
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i], this.#boardOffers[i], this.#boardDestination[i]);
-    }
+    this.#renderBoard();
   }
 
   #renderPoint(point, offers, destination) {
@@ -59,5 +55,18 @@ export default class BoardPresenter {
     });
 
     render(pointComponent, this.#boardComponent.element);
+  }
+
+  #renderBoard() {
+    if (this.#boardPoints.length === 0) {
+      render(new EmptyListView(), this.#boardContainer);
+    } else {
+      render(this.#sortView, this.#boardContainer);
+      render(this.#boardComponent, this.#boardContainer);
+
+      for (let i = 0; i < this.#boardPoints.length; i++) {
+        this.#renderPoint(this.#boardPoints[i], this.#boardOffers[i], this.#boardDestination[i]);
+      }
+    }
   }
 }
