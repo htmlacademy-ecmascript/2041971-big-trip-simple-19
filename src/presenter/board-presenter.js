@@ -1,8 +1,8 @@
+import {render, replace} from '../framework/render.js';
 import EventsItemView from '../view/events-item-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NewPointView from '../view/new-point-view.js';
 import SortView from '../view/list-sort-view.js';
-import {render} from '../render.js';
 import EmptyListView from '../view/list-empty-view.js';
 export default class BoardPresenter {
   #boardContainer = null;
@@ -29,30 +29,41 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point, offers, destination) {
-    const pointComponent = new EventsItemView({point, offers, destination});
-    const newPointComponent = new NewPointView({point, offers, destination});
-
-    const replaceCardToForm = () => this.#boardComponent.element.replaceChild(newPointComponent.element, pointComponent.element);
-    const replaceFormToCard = () => this.#boardComponent.element.replaceChild(pointComponent.element, newPointComponent.element);
-
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        replaceFormToCard();
+        replaceFormToCard.call(this);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceCardToForm();
-      document.addEventListener('keydown', escKeyDownHandler);
+    const pointComponent = new EventsItemView({
+      point,
+      offers,
+      destination,
+      onRollupClick: () => {
+        replaceCardToForm.call(this);
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
     });
 
-    newPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceFormToCard();
-      document.removeEventListener('keydown', escKeyDownHandler);
+    const newPointComponent = new NewPointView({
+      point,
+      offers,
+      destination,
+      onFormSubmit: () => {
+        replaceFormToCard.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
     });
+
+    function replaceCardToForm () {
+      replace(newPointComponent, pointComponent);
+    }
+
+    function replaceFormToCard () {
+      replace(pointComponent, newPointComponent);
+    }
 
     render(pointComponent, this.#boardComponent.element);
   }
