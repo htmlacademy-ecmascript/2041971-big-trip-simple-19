@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {humanizePointDate} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizePointDate} from '../utils/point.js';
 import {DateFormat} from '../const.js';
 
 const createOffers = (offers, offersModel) => {
@@ -45,31 +45,28 @@ const createPointTemplate = (point, offersModel, destination) => {
   </li>`;
 };
 
-export default class EventsItemView {
-  #element = null;
+export default class EventsItemView extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
+  #handleRollupClick = null;
 
-  constructor({point, offers, destination}) {
+  constructor({point, offers, destination, onRollupClick}) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
+    this.#handleRollupClick = onRollupClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
   }
 
   get template() {
     return createPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #rollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleRollupClick();
+  };
 }

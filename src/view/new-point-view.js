@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
-import {humanizePointDate} from '../utils.js';
+import {humanizePointDate} from '../utils/point.js';
 
 const createOffers = (offers, offersModel) => offersModel.offers.map((offer) => {
   const checked = offers.includes(offer.id) ? 'checked' : '';
@@ -138,31 +138,28 @@ const createNewPointTemplate = (point, offersModel, destination) => {
 </li>`;
 };
 
-export default class NewPointView {
-  #element = null;
+export default class NewPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
+  #handleFormSubmit = null;
 
-  constructor({point = BLANK_POINT, offers, destination}) {
+  constructor({point = BLANK_POINT, offers, destination, onFormSubmit}) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createNewPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

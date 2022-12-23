@@ -1,6 +1,5 @@
-import {getRandomInteger, getRandomArrayElement} from '../utils.js';
-import {DESCRIPTIONS, NAMES, PICTURE_SRC} from '../const.js';
-import {TASK_COUNT} from '../const.js';
+import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
+import {DESCRIPTIONS, NAMES, PICTURE_SRC, TASK_COUNT} from '../const.js';
 
 const generateDescription = () => {
   const carentDescription = [];

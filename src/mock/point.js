@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement} from '../utils.js';
+import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
 import {TIPES, PRICE_COEFFICIENT} from '../const.js';
 import dayjs from 'dayjs';
 
