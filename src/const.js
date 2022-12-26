@@ -40,7 +40,7 @@ const DateFormat = {
 
 const FilterTipe = {
   EVERYTHING: 'everything',
-  FUTURE: 'future'
+  FUTURE: 'future',
 };
 
 export {DESCRIPTIONS,
