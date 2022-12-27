@@ -1,5 +1,11 @@
 import dayjs from 'dayjs';
 
-const humanizePointDate = (date, format) => date ? dayjs(date).format(format) : '';
+function humanizePointDate(date, format) {
+  return date ? dayjs(date).format(format) : '';
+}
 
-export {humanizePointDate};
+function isPointFuture (date) {
+  return date || dayjs().isAfter(date, 'D');
+}
+
+export {humanizePointDate, isPointFuture};

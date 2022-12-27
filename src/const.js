@@ -38,5 +38,19 @@ const DateFormat = {
   FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
 };
 
+const FilterTipe = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+};
 
-export {DESCRIPTIONS, NAMES, PICTURE_SRC, OFFER_TITLES, TIPES, TASK_COUNT, BLANK_POINT, DateFormat, PRICE_COEFFICIENT};
+export {DESCRIPTIONS,
+  NAMES,
+  PICTURE_SRC,
+  OFFER_TITLES,
+  TIPES,
+  TASK_COUNT,
+  BLANK_POINT,
+  DateFormat,
+  PRICE_COEFFICIENT,
+  FilterTipe,
+};
