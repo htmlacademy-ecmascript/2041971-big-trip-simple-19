@@ -160,6 +160,6 @@ export default class NewPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(this.#point, this.#offers, this.#destination);
   };
 }

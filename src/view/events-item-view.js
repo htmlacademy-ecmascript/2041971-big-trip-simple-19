@@ -67,6 +67,6 @@ export default class EventsItemView extends AbstractView {
 
   #rollupClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleRollupClick(this.#point);
+    this.#handleRollupClick();
   };
 }

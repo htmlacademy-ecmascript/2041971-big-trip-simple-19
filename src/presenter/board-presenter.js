@@ -30,11 +30,14 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
-  #handlePointChange = (updatedPoint) => {
-    console.log(updatedPoint);
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handlePointChange = (updatedPoint, offers, destination) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
 
-    this.#pointPresenter.get(updatedPoint.uniqueId).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.uniqueId).init(updatedPoint, offers, destination);
   };
 
   #renderSort() {
@@ -46,7 +49,11 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({pointListContainer: this.#boardComponent.element, onDataChange: this.#handlePointChange});
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#boardComponent.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange,
+    });
     pointPresenter.init(point, offers, destination);
     this.#pointPresenter.set(point.uniqueId, pointPresenter);
   }
