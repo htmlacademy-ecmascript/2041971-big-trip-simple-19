@@ -4,6 +4,8 @@ import NewPointView from '../view/new-point-view.js';
 
 export default class PointPresenter {
   #pointListContainer = null;
+  #handleDataChenge = null;
+
   #pointComponent = null;
   #newPointComponent = null;
 
@@ -11,8 +13,9 @@ export default class PointPresenter {
   #offers = null;
   #destination = null;
 
-  constructor({pointListContainer}) {
+  constructor({pointListContainer, onDataChange}) {
     this.#pointListContainer = pointListContainer;
+    this.#handleDataChenge = onDataChange;
   }
 
   init(point, offers, destination) {
@@ -80,7 +83,9 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (point) => {
+    console.log(point);
+    this.#handleDataChenge(point);
     this.#replaceFormToCard();
   };
 }

@@ -1,6 +1,7 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
 import {TIPES, PRICE_COEFFICIENT} from '../const.js';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 
 const generatePrice = () => getRandomInteger(1, PRICE_COEFFICIENT) * PRICE_COEFFICIENT;
 
@@ -35,6 +36,7 @@ export const generatePoint = (id) => {
     id,
     offers: [...offers],
     type: generateType(),
+    uniqueId: nanoid(),
   };
 };
 
