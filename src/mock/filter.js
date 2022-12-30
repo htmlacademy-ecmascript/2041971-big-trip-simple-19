@@ -10,4 +10,3 @@ function generateFilter(points) {
 }
 
 export {generateFilter};
-
