@@ -8,4 +8,32 @@ function isPointFuture (date) {
   return date || dayjs().isAfter(date, 'D');
 }
 
-export {humanizePointDate, isPointFuture};
+function getWeightForNullData(dataA, dataB) {
+  if (dataA === null && dataB === null) {
+    return 0;
+  }
+
+  if (dataA === null) {
+    return 1;
+  }
+
+  if (dataB === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+function sortPointDate(pointA, pointB) {
+  const weight = getWeightForNullData(pointA.dateFrom, pointB.dateFrom);
+
+  return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+}
+
+function sortPointPrice(pointA, pointB) {
+  const weight = getWeightForNullData(pointA.dateFrom, pointB.dateFrom);
+
+  return weight ?? pointB.basePrice - pointA.basePrice;
+}
+
+export {humanizePointDate, isPointFuture, sortPointDate, sortPointPrice};

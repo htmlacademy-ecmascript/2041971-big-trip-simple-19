@@ -4,18 +4,23 @@ import SortView from '../view/list-sort-view.js';
 import EmptyListView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import {updateItem} from '../utils/common.js';
+import {SortType} from '../const.js';
+import {sortPointDate, sortPointPrice} from '../utils/point.js';
+
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
 
   #boardComponent = new EventsListView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #noPointComponent = new EmptyListView();
 
   #boardPoints = [];
   #boardOffers = [];
   #boardDestination = [];
   #pointPresenter = new Map();
+  #currentSortType = SortType.DATE;
+  #sourcedBoardPoints = [];
 
   constructor({boardContainer, pointsModel}) {
     this.#boardContainer = boardContainer;
@@ -23,9 +28,11 @@ export default class BoardPresenter {
   }
 
   init() {
-    this.#boardPoints = [...this.#pointsModel.points];
+    this.#boardPoints = [...this.#pointsModel.points].sort(sortPointDate);
     this.#boardOffers = [...this.#pointsModel.offers];
     this.#boardDestination = [...this.#pointsModel.destination];
+
+    this.#sourcedBoardPoints = [...this.#pointsModel.points].sort(sortPointDate);
 
     this.#renderBoard();
   }
@@ -36,11 +43,37 @@ export default class BoardPresenter {
 
   #handlePointChange = (updatedPoint, offers, destination) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-
+    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.uniqueId).init(updatedPoint, offers, destination);
   };
 
+  #sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this.#boardPoints.sort(sortPointDate);
+        break;
+      case SortType.PRICE:
+        this.#boardPoints.sort(sortPointPrice);
+        break;
+      default:
+        this.#boardPoints = [...this.#sourcedBoardPoints];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderPointList();
+  };
+
   #renderSort() {
+    this.#sortComponent = new SortView({onSortTypeChange: this.#handleSortTypeChange});
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
 

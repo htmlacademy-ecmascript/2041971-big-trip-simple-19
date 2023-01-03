@@ -43,6 +43,11 @@ const FilterTipe = {
   FUTURE: 'future',
 };
 
+const SortType = {
+  DATE: 'date',
+  PRICE: 'price',
+};
+
 export {DESCRIPTIONS,
   NAMES,
   PICTURE_SRC,
@@ -53,4 +58,5 @@ export {DESCRIPTIONS,
   DateFormat,
   PRICE_COEFFICIENT,
   FilterTipe,
+  SortType,
 };
