@@ -2,11 +2,10 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 
-function createOffers(offers, offersModel) {
-  offersModel.offers.map((offer) => {
-    const checked = offers.includes(offer.id) ? 'checked' : '';
+const createOffers = (offers, offersModel) => offersModel.offers.map((offer) => {
+  const checked = offers.includes(offer.id) ? 'checked' : '';
 
-    return `
+  return `
   <div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" data-id="${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${checked}>
     <label class="event__offer-label" for="event-offer-${offer.id}">
@@ -15,18 +14,11 @@ function createOffers(offers, offersModel) {
       <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`;
-  }).join(' ');
-}
+}).join(' ');
 
-function generateDestinationsList(name) {
-  //return destinations.map((destination) => `option value=${destination}></option>`).join('');
-}
+const getPictures = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`);
 
-function getPictures(pictures) {
-  return pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`);
-}
-
-function createNewPointTemplate(point, offersModel, destination) {
+const createNewPointTemplate = (point, offersModel, destination) => {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const {name, description, pictures} = destination;
 
@@ -85,10 +77,11 @@ function createNewPointTemplate(point, offersModel, destination) {
         </div>
       </div>
       <div class="event__field-group  event__field-group--destination">
-        <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
+        <label class="event__label  event__type-output" for="event-destination-1">
+          Flight
+        </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
         <datalist id="destination-list-1">
-        ${generateDestinationsList(name)}
           <option value="Amsterdam"></option>
           <option value="Geneva"></option>
           <option value="Chamonix"></option>
@@ -126,7 +119,7 @@ function createNewPointTemplate(point, offersModel, destination) {
     </section>
   </form>
 </li>`;
-}
+};
 
 export default class NewPointView extends AbstractStatefulView {
   #offers = null;
@@ -138,20 +131,13 @@ export default class NewPointView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destination = destination;
     this._setState(NewPointView.parsePointToState(point));
-
     this.#handleFormSubmit = onFormSubmit;
 
-    this._restoreHandlers();
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createNewPointTemplate(this._state, this.#offers, this.#destination);
-  }
-
-  _restoreHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -159,36 +145,11 @@ export default class NewPointView extends AbstractStatefulView {
     this.#handleFormSubmit(NewPointView.parseStateToPoint(this._state), this.#offers, this.#destination);
   };
 
-  #typeChangeHandler = (evt) => {
-    evt.preventDefault();
-    if (evt.target.classList.contains('event__type-input')) {
-      this.updateElement({
-        type: evt.target.value,
-        offers: [],
-      });
-    }
-  };
-
-  #destinationChangeHandler = (evt) => {
-    evt.preventDefault();
-    if (evt.target.value) {
-      const destination = this.destination.find((element) => element.name === evt.target.value) || BLANK_POINT.destination;
-      this.updateElement({
-        destination,
-      });
-      return;
-    }
-    this.updateElement(
-      BLANK_POINT.destination,
-    );
-  };
-
   static parsePointToState(point) {
     return {...point};
   }
 
   static parseStateToPoint(state) {
-    const point = {...state};
-    return point;
+    return {...state};
   }
 }

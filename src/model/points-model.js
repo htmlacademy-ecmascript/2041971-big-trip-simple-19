@@ -5,7 +5,6 @@ import {TASK_COUNT} from '../const.js';
 
 const offersGroup = generateOffersByTipe();
 const destinations = generateDestinations();
-
 export default class PointsModel {
   #points = Array.from({length: TASK_COUNT}, (_item, index) => generatePoint(index + 1));
   #offers = this.points.map((point) => offersGroup.find((offer) => offer.type === point.type));
