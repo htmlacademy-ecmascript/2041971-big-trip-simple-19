@@ -12,8 +12,9 @@ const createOffers = (offers, offersModel) => {
    </li>` : '').join('');
 };
 
-const createPointTemplate = (point, offersModel, destination) => {
+const createPointTemplate = (point, offersModel, destinations) => {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
+  const carrentDestination = destinations.find((destination) => destination.id === point.id);
 
   const date = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
   const timeFrom = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
@@ -25,7 +26,7 @@ const createPointTemplate = (point, offersModel, destination) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination.name}</h3>
+      <h3 class="event__title">${type} ${carrentDestination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${timeFrom}</time>
@@ -48,21 +49,21 @@ const createPointTemplate = (point, offersModel, destination) => {
 export default class EventsItemView extends AbstractView {
   #point = null;
   #offers = null;
-  #destination = null;
+  #destinations = null;
   #handleRollupClick = null;
 
-  constructor({point, offers, destination, onRollupClick}) {
+  constructor({point, offers, destinations, onRollupClick}) {
     super();
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
     this.#handleRollupClick = onRollupClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
   }
 
   get template() {
-    return createPointTemplate(this.#point, this.#offers, this.#destination);
+    return createPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
   #rollupClickHandler = (evt) => {
