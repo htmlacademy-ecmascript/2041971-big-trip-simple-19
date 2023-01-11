@@ -31,8 +31,8 @@ function createDestinations(destinations) {
 function createNewPointTemplate(point, offersModel, destinations) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const carrentDestination = destinations.find((destination) => destination.id === point.id);
+  console.log(point);
   const {name, description, pictures} = carrentDestination;
-
   const startTime = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
   const endTime = humanizePointDate(dateTo, DateFormat.FORM_DATE_FORMAT);
 
@@ -148,12 +148,13 @@ export default class NewPointView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-   // this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(NewPointView.parseStateToPoint(this._state), this.#offers, this.#destinations);
+    console.log(this._state);
   };
 
   #typeChangeHandler = (evt) => {
@@ -166,25 +167,33 @@ export default class NewPointView extends AbstractStatefulView {
     }
   };
 
-  // #destinationChangeHandler = (evt) => {
-  //   evt.preventDefault();
-  //   if (evt.target.value) {
-  //     const destination = this.destination.find((element) => element.name === evt.target.value) || BLANK_POINT.destination;
-  //     this.updateElement({
-  //       destination,
-  //     });
-  //     return;
-  //   }
-  //   this.updateElement(
-  //     BLANK_POINT.destination,
-  //   );
-  // };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    const selectedDestination = this.#destinations.find((destination) => evt.target.value === destination.name);
+  console.log(selectedDestination);
+    if (!selectedDestination) {
+      evt.target.value = '';
+
+      return;
+    }
+
+    this.updateElement({
+      destination: selectedDestination.id,
+      id: selectedDestination.id,
+    });
+    console.log(this._state);
+  };
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+    };
   }
 
   static parseStateToPoint(state) {
     return {...state};
+
   }
 }
