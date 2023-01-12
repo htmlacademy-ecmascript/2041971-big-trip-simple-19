@@ -2,17 +2,18 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate} from '../utils/point.js';
 import {DateFormat} from '../const.js';
 
-const createOffers = (offers, offersModel) => {
-  const carrentOffers = offers.map((id) => offersModel.offers.find((offer) => id === offer.id));
+function createOffers(offers, type, offersModel) {
+  const offersByType = offersModel.find((offerModel) => offerModel.type === type);
+  const carrentOffers = offers.map((id) => offersByType.offers.find((offer) => id === offer.id));
   return carrentOffers.map((offer) => offer !== undefined ?
     `<li class="event__offer">
      <span class="event__offer-title">${offer.title}</span>
      &plus;&euro;&nbsp;
      <span class="event__offer-price">${offer.price}</span>
    </li>` : '').join('');
-};
+}
 
-const createPointTemplate = (point, offersModel, destinations) => {
+function createPointTemplate(point, offersModel, destinations) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const carrentDestination = destinations.find((destination) => destination.id === point.id);
 
@@ -38,13 +39,13 @@ const createPointTemplate = (point, offersModel, destinations) => {
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
-      <ul class="event__selected-offers">${createOffers(offers, offersModel)}</ul>
+      <ul class="event__selected-offers">${createOffers(offers, type, offersModel)}</ul>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
     </div>
   </li>`;
-};
+}
 
 export default class EventsItemView extends AbstractView {
   #point = null;

@@ -2,8 +2,10 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 
-function createOffers(offers, offersModel) {
-  return offersModel.offers.map((offer) => {
+function createOffers(offers, type, offersModel) {
+  const offersByType = offersModel.find((offer) => offer.type.toLowerCase() === type.toLowerCase());
+
+  return offersByType.offers.map((offer) => {
     const checked = offers.includes(offer.id) ? 'checked' : '';
 
     return `
@@ -31,8 +33,8 @@ function createDestinations(destinations) {
 function createNewPointTemplate(point, offersModel, destinations) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const carrentDestination = destinations.find((destination) => destination.id === point.id);
-  console.log(point);
   const {name, description, pictures} = carrentDestination;
+
   const startTime = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
   const endTime = humanizePointDate(dateTo, DateFormat.FORM_DATE_FORMAT);
 
@@ -112,7 +114,7 @@ function createNewPointTemplate(point, offersModel, destinations) {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">${createOffers(offers, offersModel)}</div>
+        <div class="event__available-offers">${createOffers(offers, type, offersModel)}</div>
       </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -124,7 +126,7 @@ function createNewPointTemplate(point, offersModel, destinations) {
     </section>
   </form>
 </li>`;
-};
+}
 
 export default class NewPointView extends AbstractStatefulView {
   #offers = null;
@@ -154,7 +156,6 @@ export default class NewPointView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(NewPointView.parseStateToPoint(this._state), this.#offers, this.#destinations);
-    console.log(this._state);
   };
 
   #typeChangeHandler = (evt) => {
@@ -172,10 +173,9 @@ export default class NewPointView extends AbstractStatefulView {
     evt.preventDefault();
 
     const selectedDestination = this.#destinations.find((destination) => evt.target.value === destination.name);
-  console.log(selectedDestination);
+
     if (!selectedDestination) {
       evt.target.value = '';
-
       return;
     }
 
@@ -183,17 +183,13 @@ export default class NewPointView extends AbstractStatefulView {
       destination: selectedDestination.id,
       id: selectedDestination.id,
     });
-    console.log(this._state);
   };
 
   static parsePointToState(point) {
-    return {...point,
-      isDisabled: false,
-    };
+    return {...point};
   }
 
   static parseStateToPoint(state) {
     return {...state};
-
   }
 }

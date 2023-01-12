@@ -98,7 +98,7 @@ export default class BoardPresenter {
 
   #renderPointList() {
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i], this.#boardOffers[i], this.#boardDestinations);
+      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
     }
   }
 
