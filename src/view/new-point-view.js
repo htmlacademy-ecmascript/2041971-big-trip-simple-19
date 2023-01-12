@@ -1,6 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createOffers(offers, type, offersModel) {
   const offersByType = offersModel.find((offer) => offer.type.toLowerCase() === type.toLowerCase());
@@ -132,6 +135,7 @@ export default class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
+  #datepicker = null;
 
   constructor({point = BLANK_POINT, offers, destinations, onFormSubmit}) {
     super();
@@ -145,6 +149,12 @@ export default class NewPointView extends AbstractStatefulView {
 
   get template() {
     return createNewPointTemplate(this._state, this.#offers, this.#destinations);
+  }
+
+  reset(point) {
+    this.updateElement(
+      NewPointView.parsePointToState(point),
+    );
   }
 
   _restoreHandlers() {
@@ -184,6 +194,17 @@ export default class NewPointView extends AbstractStatefulView {
       id: selectedDestination.id,
     });
   };
+
+  #setDatepicker() {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('.event__field-group--time'),
+      {
+        dateFormat: 'Y/m/d',
+        mode: 'range',
+        onChange: this.#dateChangeHandler,
+      }
+    );
+  }
 
   static parsePointToState(point) {
     return {...point};
