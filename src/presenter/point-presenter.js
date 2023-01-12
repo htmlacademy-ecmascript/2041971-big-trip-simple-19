@@ -17,7 +17,7 @@ export default class PointPresenter {
 
   #point = null;
   #offers = null;
-  #destination = null;
+  #destinations = null;
   #mode = Mode.DEFAULT;
 
   constructor({pointListContainer, onDataChange, onModeChange}) {
@@ -26,10 +26,10 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, offers, destination) {
+  init(point, offers, destinations) {
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevNewPointComponent = this.#newPointComponent;
@@ -37,14 +37,14 @@ export default class PointPresenter {
     this.#pointComponent = new EventsItemView({
       point: this.#point,
       offers: this.#offers,
-      destination: this.#destination,
+      destinations: this.#destinations,
       onRollupClick: this.#handleRollupClick,
     });
 
     this.#newPointComponent = new NewPointView({
       point: this.#point,
       offers: this.#offers,
-      destination: this.#destination,
+      destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
     });
 
@@ -100,8 +100,8 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = (point, offers, destination) => {
-    this.#handleDataChange(point, offers, destination);
+  #handleFormSubmit = (point, offers, destinations) => {
+    this.#handleDataChange(point, offers, destinations);
     this.#replaceFormToCard();
   };
 }

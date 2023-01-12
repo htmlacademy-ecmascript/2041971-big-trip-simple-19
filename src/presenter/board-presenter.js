@@ -17,7 +17,7 @@ export default class BoardPresenter {
 
   #boardPoints = [];
   #boardOffers = [];
-  #boardDestination = [];
+  #boardDestinations = [];
   #pointPresenter = new Map();
   #currentSortType = SortType.DATE;
   #sourcedBoardPoints = [];
@@ -30,7 +30,7 @@ export default class BoardPresenter {
   init() {
     this.#boardPoints = [...this.#pointsModel.points].sort(sortPointDate);
     this.#boardOffers = [...this.#pointsModel.offers];
-    this.#boardDestination = [...this.#pointsModel.destination];
+    this.#boardDestinations = [...this.#pointsModel.destinations];
 
     this.#sourcedBoardPoints = [...this.#pointsModel.points].sort(sortPointDate);
 
@@ -41,10 +41,10 @@ export default class BoardPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint, offers, destination) => {
+  #handlePointChange = (updatedPoint, offers, destinations) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.uniqueId).init(updatedPoint, offers, destination);
+    this.#pointPresenter.get(updatedPoint.uniqueId).init(updatedPoint, offers, destinations);
   };
 
   #sortPoints(sortType) {
@@ -81,13 +81,13 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderPoint(point, offers, destination) {
+  #renderPoint(point, offers, destinations) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#boardComponent.element,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange,
     });
-    pointPresenter.init(point, offers, destination);
+    pointPresenter.init(point, offers, destinations);
     this.#pointPresenter.set(point.uniqueId, pointPresenter);
   }
 
@@ -98,7 +98,7 @@ export default class BoardPresenter {
 
   #renderPointList() {
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i], this.#boardOffers[i], this.#boardDestination[i]);
+      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
     }
   }
 
