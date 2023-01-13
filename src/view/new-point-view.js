@@ -148,7 +148,17 @@ export default class NewPointView extends AbstractStatefulView {
   }
 
   get template() {
+
     return createNewPointTemplate(this._state, this.#offers, this.#destinations);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   }
 
   reset(point) {
@@ -161,6 +171,8 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
+
+    this.#setDatepicker();
   }
 
   #formSubmitHandler = (evt) => {
@@ -195,15 +207,25 @@ export default class NewPointView extends AbstractStatefulView {
     });
   };
 
+  #dateChangeHandler = ([userDate]) => {
+    console.log(this._state);
+    console.log(userDate);
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
   #setDatepicker() {
     this.#datepicker = flatpickr(
       this.element.querySelector('.event__field-group--time'),
       {
-        dateFormat: 'Y/m/d',
-        mode: 'range',
+        enableTime: true,
+        dateFormat: 'Y/m/d H:i',
+        //mode: 'range',
         onChange: this.#dateChangeHandler,
       }
     );
+    console.log(this.#datepicker);
   }
 
   static parsePointToState(point) {
