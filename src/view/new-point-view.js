@@ -135,7 +135,8 @@ export default class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
-  #datepicker = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor({point = BLANK_POINT, offers, destinations, onFormSubmit}) {
     super();
@@ -155,9 +156,13 @@ export default class NewPointView extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#dateFromPicker) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    }
+    if (this.#dateToPicker) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
     }
   }
 
@@ -207,25 +212,35 @@ export default class NewPointView extends AbstractStatefulView {
     });
   };
 
-  #dateChangeHandler = ([userDate]) => {
-    console.log(this._state);
-    console.log(userDate);
+
+  #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
       dateFrom: userDate,
     });
   };
 
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   #setDatepicker() {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('.event__field-group--time'),
+    this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'),
       {
         enableTime: true,
-        dateFormat: 'Y/m/d H:i',
-        //mode: 'range',
-        onChange: this.#dateChangeHandler,
-      }
-    );
-    console.log(this.#datepicker);
+        dateFormat: 'y/m/d H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler
+      });
+
+    this.#dateToPicker = flatpickr(this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'y/m/d H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler
+      });
   }
 
   static parsePointToState(point) {
