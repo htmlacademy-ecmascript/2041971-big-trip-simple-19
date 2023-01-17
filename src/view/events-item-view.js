@@ -2,9 +2,14 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate} from '../utils/point.js';
 import {DateFormat} from '../const.js';
 
-function createOffers(offers, type, offersModel) {
+function renderCurrentOffers(selectedOffers, type, offersModel) {
   const offersByType = offersModel.find((offerModel) => offerModel.type === type);
-  const carrentOffers = offers.map((id) => offersByType.offers.find((offer) => id === offer.id));
+  return selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id));
+}
+
+function createOffersTemplate(selectedOffers, type, offersModel) {
+  const carrentOffers = renderCurrentOffers(selectedOffers, type, offersModel);
+
   return carrentOffers.map((offer) => offer !== undefined ?
     `<li class="event__offer">
      <span class="event__offer-title">${offer.title}</span>
@@ -13,13 +18,25 @@ function createOffers(offers, type, offersModel) {
    </li>` : '').join('');
 }
 
-function createPointTemplate(point, offersModel, destinations) {
-  const {dateFrom, dateTo, offers, type, basePrice} = point;
-  const carrentDestination = destinations.find((destination) => destination.id === point.id);
+function renderCurrentDestination(point, destinationsModel) {
+  return destinationsModel.find((destination) => destination.id === point.id);
+}
 
-  const date = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
-  const timeFrom = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
-  const timeTo = humanizePointDate(dateTo, DateFormat.TIME_FORMAT);
+function renderDate(dateFrom, dateTo) {
+  return {
+    date: humanizePointDate(dateFrom, DateFormat.DATE_FORMAT),
+    timeFrom: humanizePointDate(dateFrom, DateFormat.TIME_FORMAT),
+    timeTo: humanizePointDate(dateTo, DateFormat.TIME_FORMAT),
+  };
+}
+
+
+function createPointTemplate(point, offersModel, destinationsModel) {
+  const {dateFrom, dateTo, offers, type, basePrice} = point;
+  const carrentDestination = renderCurrentDestination(point, destinationsModel);
+  const date = renderDate(dateFrom, dateTo).date;
+  const timeFrom = renderDate(dateFrom, dateTo).timeFrom;
+  const timeTo = renderDate(dateFrom, dateTo).timeTo;
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -39,7 +56,7 @@ function createPointTemplate(point, offersModel, destinations) {
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
-      <ul class="event__selected-offers">${createOffers(offers, type, offersModel)}</ul>
+      <ul class="event__selected-offers">${createOffersTemplate(offers, type, offersModel)}</ul>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>

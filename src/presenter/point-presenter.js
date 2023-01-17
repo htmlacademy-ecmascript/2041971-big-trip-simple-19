@@ -1,6 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import EventsItemView from '../view/events-item-view.js';
 import NewPointView from '../view/new-point-view.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -103,7 +104,12 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point, offers, destinations) => {
-    this.#handleDataChange(point, offers, destinations);
+    this.#handleDataChange(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      point,
+      offers,
+      destinations);
     this.#replaceFormToCard();
   };
 }
