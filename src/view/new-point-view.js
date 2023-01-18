@@ -151,21 +151,22 @@ export default class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
+  #handleCancelClick = null;
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit}) {
+  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onCancelClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this._setState(NewPointView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleCancelClick = onCancelClick;
 
     this._restoreHandlers();
   }
 
   get template() {
-
     return createNewPointTemplate(this._state, this.#offers, this.#destinations);
   }
 
@@ -192,6 +193,7 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler)
 
     this.#setDatepicker();
   }
@@ -257,6 +259,12 @@ export default class NewPointView extends AbstractStatefulView {
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler
       });
+  }
+
+  #formCancelClickHandler = (evt) => {
+    evt.preventDefault();
+
+    this.#handleCancelClick(NewPointView.parseStateToPoint(this._state));
   }
 
   static parsePointToState(point) {
