@@ -3,6 +3,7 @@ import EventsListView from '../view/events-list-view.js';
 import SortView from '../view/list-sort-view.js';
 import EmptyListView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
+import {filter} from '../utils/filter.js';
 import {SortType, UpdateType, UserAction} from '../const.js';
 import {sortPointDate, sortPointPrice} from '../utils/point.js';
 
@@ -11,6 +12,7 @@ export default class BoardPresenter {
   #pointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
+  #filterModel = null;
 
   #boardComponent = new EventsListView();
   #sortComponent = null;
@@ -19,24 +21,29 @@ export default class BoardPresenter {
   #pointPresenter = new Map();
   #currentSortType = SortType.DATE;
 
-  constructor({boardContainer, pointsModel, offersModel, destinationsModel}) {
+  constructor({boardContainer, pointsModel, offersModel, destinationsModel, filterModel}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
+    this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
+    console.log(points);
+
     switch (this.#currentSortType) {
       case SortType.DATE:
-        return [...this.#pointsModel.points].sort(sortPointDate);
+        return filteredPoints.sort(sortPointDate);
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
     }
-
-    return [...this.#pointsModel.points].sort(sortPointDate);
   }
 
   get offers() {
@@ -72,7 +79,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.id).init(data);
+        this.#pointPresenter.get(data.uniqueId).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -135,11 +142,11 @@ export default class BoardPresenter {
   #renderBoard() {
     if (this.points.length === 0) {
       this.#renderNoPoints();
-    } else {
-      this.#renderSort();
-      render(this.#boardComponent, this.#boardContainer);
-
-      this.#renderPointList();
+      return;
     }
+    this.#renderSort();
+    render(this.#boardComponent, this.#boardContainer);
+    this.#renderPointList();
+
   }
 }
