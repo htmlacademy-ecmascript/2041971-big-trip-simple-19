@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
-import {DESCRIPTIONS, NAMES, PICTURE_SRC, TASK_COUNT} from '../const.js';
+import {DESCRIPTIONS, NAMES, PICTURE_SRC, POINTS_COUNT} from '../const.js';
 
 const generateDescription = () => {
   const carentDescription = [];
@@ -25,4 +25,4 @@ const generateDestination = (id) => ({
   pictures: generatePictures(),
 });
 
-export const generateDestinations = () => Array.from({length: TASK_COUNT}, (_item, index) => generateDestination(index + 1));
+export const generateDestinations = () => Array.from({length: POINTS_COUNT}, (_item, index) => generateDestination(index + 1));

@@ -44,6 +44,8 @@ export default class BoardPresenter {
       case SortType.PRICE:
         return filteredPoints.sort(sortPointPrice);
     }
+
+    return filteredPoints;
   }
 
   get offers() {
@@ -60,6 +62,7 @@ export default class BoardPresenter {
 
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
+    console.log('____');
   };
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -76,10 +79,10 @@ export default class BoardPresenter {
     }
   };
 
-  #handleModelEvent = (updateType, data) => {
+  #handleModelEvent = (updateType, point, offers, destinations) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.uniqueId).init(data);
+        this.#pointPresenter.get(point.uniqueId).init(point, offers, destinations);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -146,7 +149,7 @@ export default class BoardPresenter {
     }
     this.#renderSort();
     render(this.#boardComponent, this.#boardContainer);
-    this.#renderPointList();
 
+    this.#renderPointList();
   }
 }

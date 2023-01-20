@@ -1,5 +1,5 @@
 import {render, replace, remove} from '../framework/render.js';
-import {FilterTipe, UpdateType} from '../const';
+import {FilterType, UpdateType} from '../const';
 import FilterView from '../view/list-filter-view';
 
 export default class FilterPresenter {
@@ -22,11 +22,11 @@ export default class FilterPresenter {
   get filters() {
     return [
       {
-        type: FilterTipe.EVERYTHING,
+        type: FilterType.EVERYTHING,
         name: 'everything',
       },
       {
-        type: FilterTipe.FUTURE,
+        type: FilterType.FUTURE,
         name: 'future',
       },
     ];

@@ -20,7 +20,7 @@ const OFFER_TITLES = ['Order Uber', 'Add luggage', 'Switch to comfort', 'Rent a 
 
 const TIPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
-const TASK_COUNT = 12;
+const POINTS_COUNT = 12;
 const PRICE_COEFFICIENT = 10;
 
 const BLANK_POINT = {
@@ -38,7 +38,7 @@ const DateFormat = {
   FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
 };
 
-const FilterTipe = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
 };
@@ -51,7 +51,6 @@ const SortType = {
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
-  DELETE_POINT: 'DELETE_POINT',
 };
 
 const UpdateType = {
@@ -65,11 +64,11 @@ export {DESCRIPTIONS,
   PICTURE_SRC,
   OFFER_TITLES,
   TIPES,
-  TASK_COUNT,
+  POINTS_COUNT,
   BLANK_POINT,
   DateFormat,
   PRICE_COEFFICIENT,
-  FilterTipe,
+  FilterType,
   SortType,
   UserAction,
   UpdateType,

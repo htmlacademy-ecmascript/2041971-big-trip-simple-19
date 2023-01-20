@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
@@ -147,7 +148,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
 </li>`;
 }
 
-export default class NewPointView extends AbstractStatefulView {
+class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
@@ -193,7 +194,7 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler)
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler);
 
     this.#setDatepicker();
   }
@@ -265,7 +266,7 @@ export default class NewPointView extends AbstractStatefulView {
     evt.preventDefault();
 
     this.#handleCancelClick(NewPointView.parseStateToPoint(this._state));
-  }
+  };
 
   static parsePointToState(point) {
     return {...point};
@@ -275,3 +276,20 @@ export default class NewPointView extends AbstractStatefulView {
     return {...state};
   }
 }
+
+class NewTaskButtonView extends AbstractView {
+  #handleClick = null;
+
+  constructor({onClick}) {
+    super();
+    this.#handleClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler);
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
+}
+
+export {NewPointView, NewTaskButtonView};
