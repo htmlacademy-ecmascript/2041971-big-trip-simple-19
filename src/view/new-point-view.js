@@ -1,15 +1,21 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
-function createOffers(offers, type, offersModel) {
-  const offersByType = offersModel.find((offer) => offer.type.toLowerCase() === type.toLowerCase());
+function renderOffersByType(type, offersModel) {
+  const typeInLowerCase = type.toLowerCase();
+  return offersModel.find((offer) => offer.type.toLowerCase() === typeInLowerCase);
+}
+
+function createOffersTemplate(selectedOffers, type, offersModel) {
+  const offersByType = renderOffersByType(type, offersModel);
 
   return offersByType.offers.map((offer) => {
-    const checked = offers.includes(offer.id) ? 'checked' : '';
+    const checked = selectedOffers.includes(offer.id) ? 'checked' : '';
 
     return `
      <div class="event__offer-selector">
@@ -23,23 +29,34 @@ function createOffers(offers, type, offersModel) {
   }).join(' ');
 }
 
-function getPictures (pictures) {
+function createPicturesTemplate(pictures) {
   return pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`);
 }
 
-function createDestinations(destinations) {
-  return destinations.reduce((acc, destination) => acc.includes(destination.name) ? acc : `${acc}
+function createDestinationsTemplate(destinationsModel) {
+  return destinationsModel.reduce((acc, destination) => acc.includes(destination.name) ? acc : `${acc}
   <option value="${destination.name}"></option>
 `, '');
 }
 
-function createNewPointTemplate(point, offersModel, destinations) {
+function renderCurrentDestination(point, destinationsModel) {
+  return destinationsModel.find((destination) => destination.id === point.id);
+}
+
+function renderDate(dateFrom, dateTo) {
+  return {
+    startTime: humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT),
+    endTime: humanizePointDate(dateTo, DateFormat.FORM_DATE_FORMAT),
+  };
+}
+
+function createNewPointTemplate(point, offersModel, destinationsModel) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
-  const carrentDestination = destinations.find((destination) => destination.id === point.id);
+  const carrentDestination = renderCurrentDestination(point, destinationsModel);
   const {name, description, pictures} = carrentDestination;
 
-  const startTime = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
-  const endTime = humanizePointDate(dateTo, DateFormat.FORM_DATE_FORMAT);
+  const startTime = renderDate(dateFrom, dateTo).startTime;
+  const endTime = renderDate(dateFrom, dateTo).endTime;
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -95,7 +112,7 @@ function createNewPointTemplate(point, offersModel, destinations) {
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
-        <datalist id="destination-list-1">${createDestinations(destinations)}</datalist>
+        <datalist id="destination-list-1">${createDestinationsTemplate(destinationsModel)}</datalist>
       </div>
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -117,13 +134,13 @@ function createNewPointTemplate(point, offersModel, destinations) {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">${createOffers(offers, type, offersModel)}</div>
+        <div class="event__available-offers">${createOffersTemplate(offers, type, offersModel)}</div>
       </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${description}</p>
         <div class="event__photos-container">
-          <div class="event__photos-tape">${getPictures(pictures)}</div>
+          <div class="event__photos-tape">${createPicturesTemplate(pictures)}</div>
         </div>
       </section>
     </section>
@@ -131,25 +148,26 @@ function createNewPointTemplate(point, offersModel, destinations) {
 </li>`;
 }
 
-export default class NewPointView extends AbstractStatefulView {
+class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
+  #handleCancelClick = null;
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit}) {
+  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onCancelClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this._setState(NewPointView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleCancelClick = onCancelClick;
 
     this._restoreHandlers();
   }
 
   get template() {
-
     return createNewPointTemplate(this._state, this.#offers, this.#destinations);
   }
 
@@ -176,6 +194,7 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler);
 
     this.#setDatepicker();
   }
@@ -243,6 +262,12 @@ export default class NewPointView extends AbstractStatefulView {
       });
   }
 
+  #formCancelClickHandler = (evt) => {
+    evt.preventDefault();
+
+    this.#handleCancelClick(NewPointView.parseStateToPoint(this._state));
+  };
+
   static parsePointToState(point) {
     return {...point};
   }
@@ -251,3 +276,20 @@ export default class NewPointView extends AbstractStatefulView {
     return {...state};
   }
 }
+
+class NewTaskButtonView extends AbstractView {
+  #handleClick = null;
+
+  constructor({onClick}) {
+    super();
+    this.#handleClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler);
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
+}
+
+export {NewPointView, NewTaskButtonView};

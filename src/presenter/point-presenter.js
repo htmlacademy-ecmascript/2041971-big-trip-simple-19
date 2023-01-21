@@ -1,6 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import EventsItemView from '../view/events-item-view.js';
-import NewPointView from '../view/new-point-view.js';
+import {NewPointView} from '../view/new-point-view.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -46,6 +47,7 @@ export default class PointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
+      onCancelClick: this.#handleCancelClick,
     });
 
     if (prevPointComponent === null || prevNewPointComponent === null) {
@@ -102,8 +104,20 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = (point, offers, destinations) => {
-    this.#handleDataChange(point, offers, destinations);
+  #handleFormSubmit = (point) => {
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this.#replaceFormToCard();
+  };
+
+  #handleCancelClick = (point) => {
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
