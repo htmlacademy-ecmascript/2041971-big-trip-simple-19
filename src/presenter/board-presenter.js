@@ -36,8 +36,7 @@ export default class BoardPresenter {
     const filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[filterType](points);
-    console.log(points);
-
+    console.log(filterType, filteredPoints);
     switch (this.#currentSortType) {
       case SortType.DATE:
         return filteredPoints.sort(sortPointDate);
@@ -125,9 +124,7 @@ export default class BoardPresenter {
   }
 
   #renderPointList() {
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i], this.offers, this.destinations);
-    }
+    this.points.forEach((point) => this.#renderPoint(point, this.offers, this.destinations));
   }
 
   #clearBoard({resetSortType = false} = {}) {
