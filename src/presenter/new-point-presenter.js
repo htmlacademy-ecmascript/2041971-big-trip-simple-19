@@ -1,5 +1,5 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import TaskEditView from '../view/task-edit-view.js';
+import NewPointView from '../view/new-point-view.js';
 import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../const.js';
 
@@ -21,7 +21,7 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#newPointComponent = new TaskEditView({
+    this.#newPointComponent = new NewPointView({
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });

@@ -1,5 +1,4 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import AbstractView from '../framework/view/abstract-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
@@ -148,7 +147,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
 </li>`;
 }
 
-class NewPointView extends AbstractStatefulView {
+export default class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
@@ -276,20 +275,3 @@ class NewPointView extends AbstractStatefulView {
     return {...state};
   }
 }
-
-class NewTaskButtonView extends AbstractView {
-  #handleClick = null;
-
-  constructor({onClick}) {
-    super();
-    this.#handleClick = onClick;
-    this.element.addEventListener('click', this.#clickHandler);
-  }
-
-  #clickHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleClick();
-  };
-}
-
-export {NewPointView, NewTaskButtonView};

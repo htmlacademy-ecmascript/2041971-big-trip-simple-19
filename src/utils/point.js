@@ -5,7 +5,7 @@ function humanizePointDate(date, format) {
 }
 
 function isPointFuture (date) {
-  return dayjs().isSame(date, 'D');
+  return dayjs().isBefore(date, 'day') || dayjs().isSame(date, 'day');
 }
 
 function getWeightForNullData(dataA, dataB) {

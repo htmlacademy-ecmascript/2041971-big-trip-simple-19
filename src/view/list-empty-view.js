@@ -14,10 +14,10 @@ function createEmptyListTemplate(filterType) {
 export default class EmptyListView extends AbstractView {
   #filterType = null;
 
-  // constructor({filterType}) {
-  //   super();
-  //   this.#filterType = filterType;
-  // }
+  constructor({filterType}) {
+    super();
+    this.#filterType = filterType;
+  }
 
   get template() {
     return createEmptyListTemplate(this.#filterType);
