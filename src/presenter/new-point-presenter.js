@@ -10,20 +10,27 @@ export default class NewPointPresenter {
 
   #newPointComponent = null;
 
+  #offers = null;
+  #destinations = null;
+
   constructor({pointListContainer, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
 
-  init() {
+  init(offers, destinations) {
+    this.#offers = offers;
+    this.#destinations = destinations;
     if (this.#newPointComponent !== null) {
       return;
     }
 
     this.#newPointComponent = new NewPointView({
+      offers: this.#offers,
+      destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onCancelClick: this.#handleCancelClick,
     });
 
     render(this.#newPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
@@ -53,7 +60,7 @@ export default class NewPointPresenter {
     this.destroy();
   };
 
-  #handleDeleteClick = () => {
+  #handleCancelClick = () => {
     this.destroy();
   };
 
