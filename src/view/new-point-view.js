@@ -52,7 +52,6 @@ function renderDate(dateFrom, dateTo) {
 function createNewPointTemplate(point, offersModel, destinationsModel) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const carrentDestination = renderCurrentDestination(point, destinationsModel);
-  //const {name, description, pictures} = carrentDestination;
 
   const startTime = renderDate(dateFrom, dateTo).startTime;
   const endTime = renderDate(dateFrom, dateTo).endTime;
@@ -242,14 +241,17 @@ export default class NewPointView extends AbstractStatefulView {
     }
   };
 
-  #offersChangeHandler = () => {
+  #offersChangeHandler = (evt) => {
+    evt.preventDefault();
     const selectOffers = [];
 
-    Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
-      .forEach((checkbox) => checkbox.checked ? selectOffers.push(Number(checkbox.dataset.id)) : '');
-    this.updateElement({
-      offers: selectOffers,
-    });
+    if (evt.target.tagName === 'INPUT') {
+      Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
+        .forEach((checkbox) => checkbox.checked ? selectOffers.push(Number(checkbox.dataset.id)) : '');
+      this.updateElement({
+        offers: selectOffers,
+      });
+    }
   };
 
   #dateFromChangeHandler = ([userDate]) => {
