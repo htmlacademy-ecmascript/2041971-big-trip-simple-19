@@ -6,7 +6,9 @@ import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destinations-model.js';
 import FilterModel from './model/filter-model.js';
 import {render} from './framework/render.js';
-import PointsApiService from './points-api-service.js';
+import PointsApiService from './services/points-api-service.js';
+import OffersApiService from './services/offers-api-service.js';
+import DestinationsApiService from './services/destinations-api-service.js';
 
 const AUTHORIZATION = 'Basic gjjii300ljweq1';
 const END_POINT = 'https://19.ecmascript.pages.academy/big-trip-simple';
@@ -18,8 +20,12 @@ const tripMainElement = document.querySelector('.trip-main');
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
-const offersModel = new OffersModel();
-const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel({
+  offersApiService: new OffersApiService(END_POINT, AUTHORIZATION)
+});
+const destinationsModel = new DestinationsModel({
+  destinationsApiService: new DestinationsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter({
@@ -50,7 +56,11 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, tripMainElement);
-
 filterPresenter.init();
 boardPresenter.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripMainElement);
+  });
+offersModel.init();
+destinationsModel.init();

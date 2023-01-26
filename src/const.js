@@ -57,6 +57,12 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
 };
 
 export {DESCRIPTIONS,
@@ -72,4 +78,5 @@ export {DESCRIPTIONS,
   SortType,
   UserAction,
   UpdateType,
+  Method,
 };
