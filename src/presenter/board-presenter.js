@@ -40,7 +40,10 @@ export default class BoardPresenter {
       onDestroy: onNewPointDestroy,
     });
 
+    console.log(this.#pointsModel, this.#offersModel, this.#destinationsModel);
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
+    this.#destinationsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
@@ -99,7 +102,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, point, offers, destinations) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(point.uniqueId).init(point, offers, destinations);
+        this.#pointPresenter.get(point.id).init(point, offers, destinations);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -148,7 +151,7 @@ export default class BoardPresenter {
       onModeChange: this.#handleModeChange,
     });
     pointPresenter.init(point, offers, destinations);
-    this.#pointPresenter.set(point.uniqueId, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #renderPointList() {

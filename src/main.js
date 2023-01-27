@@ -26,6 +26,7 @@ const offersModel = new OffersModel({
 const destinationsModel = new DestinationsModel({
   destinationsApiService: new DestinationsApiService(END_POINT, AUTHORIZATION)
 });
+
 const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter({

@@ -4,10 +4,7 @@ import {DateFormat} from '../const.js';
 
 function renderCurrentOffers(selectedOffers, type, offersModel) {
   const typeInLowerCase = type.toLowerCase();
-  const offersByType = offersModel.find((offerModel) => {
-    console.log(type, offerModel);
-    return offerModel.type.toLowerCase() === typeInLowerCase;
-  });
+  const offersByType = offersModel.find((offerModel) =>offerModel.type.toLowerCase() === typeInLowerCase);
   return selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id));
 }
 
