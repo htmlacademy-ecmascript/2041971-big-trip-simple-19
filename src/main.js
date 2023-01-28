@@ -59,9 +59,10 @@ function handleNewPointButtonClick() {
 
 filterPresenter.init();
 boardPresenter.init();
+offersModel.init();
+destinationsModel.init();
 pointsModel.init()
   .finally(() => {
     render(newPointButtonComponent, tripMainElement);
   });
-offersModel.init();
-destinationsModel.init();
+

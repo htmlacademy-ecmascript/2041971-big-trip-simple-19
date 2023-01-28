@@ -13,7 +13,7 @@ function renderOffersByType(type, offersModel) {
 function createOffersTemplate(selectedOffers, type, offersModel) {
   const offersByType = renderOffersByType(type, offersModel);
 
-  return offersByType.offers.map((offer) => {
+  return offersByType ? offersByType.offers.map((offer) => {
     const checked = selectedOffers.includes(offer.id) ? 'checked' : '';
 
     return `
@@ -25,7 +25,7 @@ function createOffersTemplate(selectedOffers, type, offersModel) {
          <span class="event__offer-price">${offer.price}</span>
        </label>
      </div>`;
-  }).join(' ');
+  }).join(' ') : '';
 }
 
 function createPicturesTemplate(pictures) {
@@ -33,13 +33,11 @@ function createPicturesTemplate(pictures) {
 }
 
 function createDestinationsTemplate(destinationsModel) {
-  return destinationsModel.reduce((acc, destination) => acc.includes(destination.name) ? acc : `${acc}
-  <option value="${destination.name}"></option>
-`, '');
+  return destinationsModel.map((destination) => `<option value="${destination.name}"></option>`).join(' ');
 }
 
 function renderCurrentDestination(point, destinationsModel) {
-  return destinationsModel.find((destination) => destination.id === point.id);
+  return destinationsModel.find((destination) => destination.id === point.destination);
 }
 
 function renderDate(dateFrom, dateTo) {
@@ -226,7 +224,6 @@ export default class NewPointView extends AbstractStatefulView {
 
     this.updateElement({
       destination: selectedDestination.id,
-      id: selectedDestination.id,
     });
   };
 

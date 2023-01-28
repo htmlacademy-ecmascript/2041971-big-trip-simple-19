@@ -113,11 +113,8 @@ export default class PointPresenter {
     this.#replaceFormToCard();
   };
 
-  #handleCancelClick = (point) => {
-    this.#handleDataChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point,
-    );
+  #handleCancelClick = () => {
+    this.#newPointComponent.reset(this.#point);
+    this.#replaceFormToCard();
   };
 }

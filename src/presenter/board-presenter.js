@@ -40,10 +40,7 @@ export default class BoardPresenter {
       onDestroy: onNewPointDestroy,
     });
 
-    console.log(this.#pointsModel, this.#offersModel, this.#destinationsModel);
     this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#offersModel.addObserver(this.#handleModelEvent);
-    this.#destinationsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
@@ -93,9 +90,6 @@ export default class BoardPresenter {
       case UserAction.ADD_POINT:
         this.#pointsModel.addPoint(updateType, update);
         break;
-      case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
-        break;
     }
   };
 
@@ -124,7 +118,6 @@ export default class BoardPresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-
     this.#currentSortType = sortType;
     this.#clearBoard();
     this.#renderBoard();
@@ -155,7 +148,7 @@ export default class BoardPresenter {
   }
 
   #renderPointList() {
-    this.points.forEach((point) => this.#renderPoint(point, this.offers, this.destinations));
+    return this.points.forEach((point) => this.#renderPoint(point, this.offers, this.destinations));
   }
 
   #clearBoard({resetSortType = false} = {}) {
@@ -188,7 +181,6 @@ export default class BoardPresenter {
     }
     this.#renderSort();
     render(this.#boardComponent, this.#boardContainer);
-
     this.#renderPointList();
   }
 }

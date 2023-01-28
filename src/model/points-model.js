@@ -1,5 +1,6 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
+
 export default class PointsModel extends Observable {
   #pointsApiService = null;
   #points = [];
@@ -21,11 +22,11 @@ export default class PointsModel extends Observable {
       this.#points = [];
     }
 
-    this._notify(UpdateType.INIT, 'points');
+    this._notify(UpdateType.INIT);
   }
 
   async updatePoint(updateType, update) {
-    const index = this.#points.findIndex((point) => point.id === update.id);
+    const index = this.#points.findIndex((point) => Number(point.id) === Number(update.id));
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting task');
@@ -56,6 +57,7 @@ export default class PointsModel extends Observable {
 
   #adaptToClient(point) {
     const adaptedPoint = {...point,
+      id: Number(point['id']),
       basePrice: point['base_price'],
       dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
       dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],

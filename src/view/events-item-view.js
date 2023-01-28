@@ -5,22 +5,22 @@ import {DateFormat} from '../const.js';
 function renderCurrentOffers(selectedOffers, type, offersModel) {
   const typeInLowerCase = type.toLowerCase();
   const offersByType = offersModel.find((offerModel) =>offerModel.type.toLowerCase() === typeInLowerCase);
-  return selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id));
+  return offersByType ? selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id)) : '';
 }
 
 function createOffersTemplate(selectedOffers, type, offersModel) {
   const carrentOffers = renderCurrentOffers(selectedOffers, type, offersModel);
 
-  return carrentOffers.map((offer) => offer !== undefined ?
+  return carrentOffers ? carrentOffers.map((offer) => offer !== undefined ?
     `<li class="event__offer">
      <span class="event__offer-title">${offer.title}</span>
      &plus;&euro;&nbsp;
      <span class="event__offer-price">${offer.price}</span>
-   </li>` : '').join('');
+   </li>` : '').join('') : '';
 }
 
 function renderCurrentDestination(point, destinationsModel) {
-  return destinationsModel.find((destination) => destination.id === point.id);
+  return destinationsModel.find((destination) => destination.id === point.destination);
 }
 
 function renderDate(dateFrom, dateTo) {
