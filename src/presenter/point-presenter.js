@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import EventsItemView from '../view/events-item-view.js';
-import {NewPointView} from '../view/new-point-view.js';
+import NewPointView from '../view/new-point-view.js';
 import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
@@ -113,11 +113,8 @@ export default class PointPresenter {
     this.#replaceFormToCard();
   };
 
-  #handleCancelClick = (point) => {
-    this.#handleDataChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point,
-    );
+  #handleCancelClick = () => {
+    this.#newPointComponent.reset(this.#point);
+    this.#replaceFormToCard();
   };
 }

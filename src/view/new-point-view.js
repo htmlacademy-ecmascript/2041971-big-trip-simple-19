@@ -1,5 +1,4 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import AbstractView from '../framework/view/abstract-view.js';
 import {BLANK_POINT, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
@@ -14,7 +13,7 @@ function renderOffersByType(type, offersModel) {
 function createOffersTemplate(selectedOffers, type, offersModel) {
   const offersByType = renderOffersByType(type, offersModel);
 
-  return offersByType.offers.map((offer) => {
+  return offersByType ? offersByType.offers.map((offer) => {
     const checked = selectedOffers.includes(offer.id) ? 'checked' : '';
 
     return `
@@ -26,7 +25,7 @@ function createOffersTemplate(selectedOffers, type, offersModel) {
          <span class="event__offer-price">${offer.price}</span>
        </label>
      </div>`;
-  }).join(' ');
+  }).join(' ') : '';
 }
 
 function createPicturesTemplate(pictures) {
@@ -34,13 +33,11 @@ function createPicturesTemplate(pictures) {
 }
 
 function createDestinationsTemplate(destinationsModel) {
-  return destinationsModel.reduce((acc, destination) => acc.includes(destination.name) ? acc : `${acc}
-  <option value="${destination.name}"></option>
-`, '');
+  return destinationsModel.map((destination) => `<option value="${destination.name}"></option>`).join(' ');
 }
 
 function renderCurrentDestination(point, destinationsModel) {
-  return destinationsModel.find((destination) => destination.id === point.id);
+  return destinationsModel.find((destination) => destination.id === point.destination);
 }
 
 function renderDate(dateFrom, dateTo) {
@@ -53,7 +50,6 @@ function renderDate(dateFrom, dateTo) {
 function createNewPointTemplate(point, offersModel, destinationsModel) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;
   const carrentDestination = renderCurrentDestination(point, destinationsModel);
-  const {name, description, pictures} = carrentDestination;
 
   const startTime = renderDate(dateFrom, dateTo).startTime;
   const endTime = renderDate(dateFrom, dateTo).endTime;
@@ -111,7 +107,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
       </div>
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${carrentDestination ? carrentDestination.name : ''}" list="destination-list-1">
         <datalist id="destination-list-1">${createDestinationsTemplate(destinationsModel)}</datalist>
       </div>
       <div class="event__field-group  event__field-group--time">
@@ -138,9 +134,9 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
       </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${description}</p>
+        <p class="event__destination-description">${carrentDestination ? carrentDestination.description : ''}</p>
         <div class="event__photos-container">
-          <div class="event__photos-tape">${createPicturesTemplate(pictures)}</div>
+          <div class="event__photos-tape">${carrentDestination ? createPicturesTemplate(carrentDestination.pictures) : ''}</div>
         </div>
       </section>
     </section>
@@ -148,7 +144,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
 </li>`;
 }
 
-class NewPointView extends AbstractStatefulView {
+export default class NewPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
@@ -195,6 +191,8 @@ class NewPointView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersChangeHandler);
 
     this.#setDatepicker();
   }
@@ -214,7 +212,6 @@ class NewPointView extends AbstractStatefulView {
     }
   };
 
-
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
 
@@ -227,10 +224,32 @@ class NewPointView extends AbstractStatefulView {
 
     this.updateElement({
       destination: selectedDestination.id,
-      id: selectedDestination.id,
     });
   };
 
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.value > 0) {
+      this.updateElement({
+        basePrice: evt.target.value,
+      });
+    } else {
+      evt.target.value = '';
+    }
+  };
+
+  #offersChangeHandler = (evt) => {
+    evt.preventDefault();
+    const selectOffers = [];
+
+    if (evt.target.tagName === 'INPUT') {
+      Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
+        .forEach((checkbox) => checkbox.checked ? selectOffers.push(Number(checkbox.dataset.id)) : '');
+      this.updateElement({
+        offers: selectOffers,
+      });
+    }
+  };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
@@ -276,20 +295,3 @@ class NewPointView extends AbstractStatefulView {
     return {...state};
   }
 }
-
-class NewTaskButtonView extends AbstractView {
-  #handleClick = null;
-
-  constructor({onClick}) {
-    super();
-    this.#handleClick = onClick;
-    this.element.addEventListener('click', this.#clickHandler);
-  }
-
-  #clickHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleClick();
-  };
-}
-
-export {NewPointView, NewTaskButtonView};

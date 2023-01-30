@@ -3,23 +3,24 @@ import {humanizePointDate} from '../utils/point.js';
 import {DateFormat} from '../const.js';
 
 function renderCurrentOffers(selectedOffers, type, offersModel) {
-  const offersByType = offersModel.find((offerModel) => offerModel.type === type);
-  return selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id));
+  const typeInLowerCase = type.toLowerCase();
+  const offersByType = offersModel.find((offerModel) =>offerModel.type.toLowerCase() === typeInLowerCase);
+  return offersByType ? selectedOffers.map((id) => offersByType.offers.find((offer) => id === offer.id)) : '';
 }
 
 function createOffersTemplate(selectedOffers, type, offersModel) {
   const carrentOffers = renderCurrentOffers(selectedOffers, type, offersModel);
 
-  return carrentOffers.map((offer) => offer !== undefined ?
+  return carrentOffers ? carrentOffers.map((offer) => offer !== undefined ?
     `<li class="event__offer">
      <span class="event__offer-title">${offer.title}</span>
      &plus;&euro;&nbsp;
      <span class="event__offer-price">${offer.price}</span>
-   </li>` : '').join('');
+   </li>` : '').join('') : '';
 }
 
 function renderCurrentDestination(point, destinationsModel) {
-  return destinationsModel.find((destination) => destination.id === point.id);
+  return destinationsModel.find((destination) => destination.id === point.destination);
 }
 
 function renderDate(dateFrom, dateTo) {
@@ -44,7 +45,7 @@ function createPointTemplate(point, offersModel, destinationsModel) {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${carrentDestination.name}</h3>
+      <h3 class="event__title">${type} ${carrentDestination ? carrentDestination.name : ''}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${timeFrom}</time>
