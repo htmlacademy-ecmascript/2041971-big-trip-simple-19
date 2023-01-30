@@ -49,12 +49,12 @@ const newPointButtonComponent = new NewPointButtonView({
 });
 
 function handleNewPointFormClose() {
-  newPointButtonComponent.element.disabled = false;
+  newPointButtonComponent.element.removeAttribute('disabled');
 }
 
 function handleNewPointButtonClick() {
   boardPresenter.createPoint();
-  newPointButtonComponent.element.disabled = true;
+  newPointButtonComponent.element.setAttribute('disabled', 'disabled');
 }
 
 filterPresenter.init();

@@ -47,8 +47,18 @@ function renderDate(dateFrom, dateTo) {
   };
 }
 
+function getResetButtonName (id) {
+  if (id === undefined) {
+    return 'Cancel';
+  }
+  // if (isDeleting) {
+  //   return 'Deleting...';
+  // }
+  return 'Delete';
+}
+
 function createNewPointTemplate(point, offersModel, destinationsModel) {
-  const {dateFrom, dateTo, offers, type, basePrice} = point;
+  const {dateFrom, dateTo, offers, type, basePrice, id} = point;
   const carrentDestination = renderCurrentDestination(point, destinationsModel);
 
   const startTime = renderDate(dateFrom, dateTo).startTime;
@@ -125,7 +135,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset">${getResetButtonName(id)}</button>
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -149,16 +159,18 @@ export default class NewPointView extends AbstractStatefulView {
   #destinations = null;
   #handleFormSubmit = null;
   #handleCancelClick = null;
+  #handleDeleteClick = null;
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onCancelClick}) {
+  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onCancelClick, onDeleteClick}) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
     this._setState(NewPointView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelClick = onCancelClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -190,9 +202,14 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersChangeHandler);
+    const resetBtnElement = this.element.querySelector('.event__reset-btn');
+    if (this._state.id === undefined) {
+      resetBtnElement.addEventListener('click', this.#formCancelClickHandler);
+    } else {
+      resetBtnElement.addEventListener('click', this.#formDeleteClickHandler);
+    }
 
     this.#setDatepicker();
   }
@@ -285,6 +302,12 @@ export default class NewPointView extends AbstractStatefulView {
     evt.preventDefault();
 
     this.#handleCancelClick(NewPointView.parseStateToPoint(this._state));
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+
+    this.#handleDeleteClick(NewPointView.parseStateToPoint(this._state));
   };
 
   static parsePointToState(point) {
