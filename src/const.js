@@ -68,6 +68,11 @@ const Method = {
   DELETE: 'DELETE',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {DESCRIPTIONS,
   NAMES,
   PICTURE_SRC,
@@ -82,4 +87,5 @@ export {DESCRIPTIONS,
   UserAction,
   UpdateType,
   Method,
+  TimeLimit,
 };

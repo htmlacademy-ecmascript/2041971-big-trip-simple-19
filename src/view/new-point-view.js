@@ -47,18 +47,18 @@ function renderDate(dateFrom, dateTo) {
   };
 }
 
-function getResetButtonName (id) {
+function getResetButtonName (id, isDeleting) {
   if (id === undefined) {
     return 'Cancel';
   }
-  // if (isDeleting) {
-  //   return 'Deleting...';
-  // }
+  if (isDeleting) {
+    return 'Deleting...';
+  }
   return 'Delete';
 }
 
 function createNewPointTemplate(point, offersModel, destinationsModel) {
-  const {dateFrom, dateTo, offers, type, basePrice, id} = point;
+  const {dateFrom, dateTo, offers, type, basePrice, id, isDisabled, isSaving, isDeleting,} = point;
   const carrentDestination = renderCurrentDestination(point, destinationsModel);
 
   const startTime = renderDate(dateFrom, dateTo).startTime;
@@ -134,8 +134,8 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
       </div>
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">${getResetButtonName(id)}</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'saving...' : 'save'}</button>
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${getResetButtonName(id, isDeleting)}</button>
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -311,10 +311,18 @@ export default class NewPointView extends AbstractStatefulView {
   };
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
   }
 
   static parseStateToPoint(state) {
-    return {...state};
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    return point;
   }
 }
