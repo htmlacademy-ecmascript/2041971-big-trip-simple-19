@@ -22,7 +22,6 @@ function createOffersTemplate(selectedOffers, type, offersModel) {
    </li>`;
 }
 
-
 function renderCurrentDestination(point, destinationsModel) {
   return destinationsModel.find((destination) => destination.id === point.destination);
 }
@@ -34,7 +33,6 @@ function renderDate(dateFrom, dateTo) {
     timeTo: humanizePointDate(dateTo, DateFormat.TIME_FORMAT),
   };
 }
-
 
 function createPointTemplate(point, offersModel, destinationsModel) {
   const {dateFrom, dateTo, offers, type, basePrice} = point;

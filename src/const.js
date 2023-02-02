@@ -11,6 +11,7 @@ const DateFormat = {
   DATE_FORMAT: 'MMM D',
   TIME_FORMAT: 'hh:mm',
   FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
+  DATEPICKER_FORMAT: 'y/m/d H:i',
 };
 
 const FilterType = {
@@ -48,6 +49,24 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
+const ErrorMessage = {
+  UNEXISTING_ERROR:'Can\'t update unexisting point',
+  UPDATE_ERROR: 'Can\'t update point',
+  ADD_ERROR: 'Can\'t add point',
+  DELETE_ERROR: 'Can\'t delete point',
+};
+
+const Url = {
+  DESTINATIONS: 'destinations',
+  OFFERS: 'offers',
+  POINTS: 'points',
+};
+
+const EventsMessage = {
+  EVERYTHING: 'Click New Event to create your first point',
+  FUTURE: 'There are no future events now',
+};
+
 export {
   BLANK_POINT,
   DateFormat,
@@ -57,4 +76,7 @@ export {
   UpdateType,
   Method,
   TimeLimit,
+  ErrorMessage,
+  Url,
+  EventsMessage,
 };
