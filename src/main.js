@@ -10,7 +10,7 @@ import PointsApiService from './services/points-api-service.js';
 import OffersApiService from './services/offers-api-service.js';
 import DestinationsApiService from './services/destinations-api-service.js';
 
-const AUTHORIZATION = 'Basic gjjii300ljweq1';
+const AUTHORIZATION = 'Basic gjjii300ljweq2';
 const END_POINT = 'https://19.ecmascript.pages.academy/big-trip-simple';
 
 const tripFiltersElement = document.querySelector('.trip-controls__filters');
@@ -49,12 +49,12 @@ const newPointButtonComponent = new NewPointButtonView({
 });
 
 function handleNewPointFormClose() {
-  newPointButtonComponent.element.disabled = false;
+  newPointButtonComponent.element.removeAttribute('disabled');
 }
 
 function handleNewPointButtonClick() {
   boardPresenter.createPoint();
-  newPointButtonComponent.element.disabled = true;
+  newPointButtonComponent.element.setAttribute('disabled', 'disabled');
 }
 
 filterPresenter.init();

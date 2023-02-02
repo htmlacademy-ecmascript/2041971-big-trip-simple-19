@@ -11,13 +11,17 @@ function renderCurrentOffers(selectedOffers, type, offersModel) {
 function createOffersTemplate(selectedOffers, type, offersModel) {
   const carrentOffers = renderCurrentOffers(selectedOffers, type, offersModel);
 
-  return carrentOffers ? carrentOffers.map((offer) => offer !== undefined ?
+  return carrentOffers.length !== 0 ? carrentOffers.map((offer) => offer !== undefined ?
     `<li class="event__offer">
      <span class="event__offer-title">${offer.title}</span>
      &plus;&euro;&nbsp;
      <span class="event__offer-price">${offer.price}</span>
-   </li>` : '').join('') : '';
+   </li>` : '').join('') :
+    `<li class="event__offer">
+     <span class="event__offer-title">No additional offers</span>
+   </li>`;
 }
+
 
 function renderCurrentDestination(point, destinationsModel) {
   return destinationsModel.find((destination) => destination.id === point.destination);

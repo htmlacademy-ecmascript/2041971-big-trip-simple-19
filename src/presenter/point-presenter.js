@@ -48,6 +48,7 @@ export default class PointPresenter {
       destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onCancelClick: this.#handleCancelClick,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevPointComponent === null || prevNewPointComponent === null) {
@@ -57,6 +58,7 @@ export default class PointPresenter {
 
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     if (this.#mode === Mode.EDITING) {
@@ -77,6 +79,41 @@ export default class PointPresenter {
       this.#newPointComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newPointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#newPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#newPointComponent.shake(resetFormState);
   }
 
   #replaceCardToForm() {
@@ -116,5 +153,13 @@ export default class PointPresenter {
   #handleCancelClick = () => {
     this.#newPointComponent.reset(this.#point);
     this.#replaceFormToCard();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
