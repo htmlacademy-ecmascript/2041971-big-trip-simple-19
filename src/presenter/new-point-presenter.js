@@ -51,6 +51,7 @@ export default class NewPointPresenter {
   }
 
   setSaving() {
+    console.log(this.#newPointComponent);
     this.#newPointComponent.updateElement({
       isDisabled: true,
       isSaving: true,
@@ -58,6 +59,7 @@ export default class NewPointPresenter {
   }
 
   setAborting() {
+    console.log(this.#newPointComponent);
     const resetFormState = () => {
       this.#newPointComponent.updateElement({
         isDisabled: false,

@@ -295,6 +295,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateFrom,
+        maxDate:this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       });
 
@@ -303,6 +304,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       });
   }
