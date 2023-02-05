@@ -63,7 +63,7 @@ function renderDate(dateFrom, dateTo) {
   };
 }
 
-function getResetButtonName (id, isDeleting) {
+function getResetButtonName(id, isDeleting) {
   if (id === undefined) {
     return 'Cancel';
   }
@@ -71,6 +71,13 @@ function getResetButtonName (id, isDeleting) {
     return 'Deleting...';
   }
   return 'Delete';
+}
+
+function getRollupButton(id) {
+  return id !== undefined ?
+    `<button class="event__rollup-btn" type="button">
+         <span class="visually-hidden">Open event</span>
+    </button>` : '';
 }
 
 function createNewPointTemplate(point, offersModel, destinationsModel) {
@@ -152,6 +159,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'saving...' : 'save'}</button>
       <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${getResetButtonName(id, isDeleting)}</button>
+      ${getRollupButton(id)}
     </header>
     <section class="event__details">
       ${renderOffersContainerTemplate(type, offersModel, offers)}
@@ -210,6 +218,7 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCancelClickHandler);
     const availableOffersElement = this.element.querySelector('.event__available-offers');
     if (availableOffersElement) {
       availableOffersElement.addEventListener('change', this.#offersChangeHandler);

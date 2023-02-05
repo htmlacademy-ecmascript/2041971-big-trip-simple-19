@@ -103,7 +103,7 @@ export default class BoardPresenter {
         try {
           await this.#pointsModel.addPoint(updateType, update);
         } catch(err) {
-          this.#newPointPresenter.setAborting();
+          this.#newPointPresenter.destroy();
         }
         break;
       case UserAction.DELETE_POINT:
