@@ -9,7 +9,7 @@ const BLANK_POINT = {
 
 const DateFormat = {
   DATE_FORMAT: 'MMM D',
-  TIME_FORMAT: 'hh:mm',
+  TIME_FORMAT: 'HH:mm',
   FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
   DATEPICKER_FORMAT: 'y/m/d H:i',
 };
