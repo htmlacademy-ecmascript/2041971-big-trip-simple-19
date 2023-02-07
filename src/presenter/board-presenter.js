@@ -59,6 +59,10 @@ export default class BoardPresenter {
         return filteredPoints.sort(sortPointDate);
       case SortType.PRICE:
         return filteredPoints.sort(sortPointPrice);
+      case SortType.EVENT:
+      case SortType.TIME:
+      case SortType.OFFERS:
+        return filteredPoints.sort(sortPointDate);
     }
 
     return filteredPoints;
