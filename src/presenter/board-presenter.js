@@ -59,9 +59,9 @@ export default class BoardPresenter {
         return filteredPoints.sort(sortPointDate);
       case SortType.PRICE:
         return filteredPoints.sort(sortPointPrice);
+      default:
+        return filteredPoints;
     }
-
-    return filteredPoints;
   }
 
   get offers() {
@@ -103,7 +103,7 @@ export default class BoardPresenter {
         try {
           await this.#pointsModel.addPoint(updateType, update);
         } catch(err) {
-          this.#newPointPresenter.destroy();
+          this.#newPointPresenter.setAborting();
         }
         break;
       case UserAction.DELETE_POINT:

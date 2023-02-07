@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {BLANK_POINT, DateFormat} from '../const.js';
+import {BLANK_POINT, DateFormat, timePickerFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
 
@@ -80,6 +80,18 @@ function getRollupButton(id) {
     </button>` : '';
 }
 
+const createEventTypeListTemplate = (offersModel, currentType, isDisabled) => {
+  const eventTypeListTemplate = offersModel.map(({type}) => `
+    <div class="event__type-item" ${isDisabled ? 'disabled' : ''}>
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}"
+      ${currentType === type ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+    </div>
+  `);
+
+  return eventTypeListTemplate.join('');
+};
+
 function createNewPointTemplate(point, offersModel, destinationsModel) {
   const {dateFrom, dateTo, offers, type, basePrice, id, isDisabled, isSaving, isDeleting,} = point;
   const carrentDestination = renderCurrentDestination(point, destinationsModel);
@@ -99,42 +111,7 @@ function createNewPointTemplate(point, offersModel, destinationsModel) {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            <div class="event__type-item">
-              <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-              <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-              <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-              <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-              <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-              <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-              <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-              <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-            </div>
-            <div class="event__type-item">
-              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-              <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-            </div>
+            ${createEventTypeListTemplate(offersModel, type, isDisabled)}
           </fieldset>
         </div>
       </div>
@@ -218,7 +195,6 @@ export default class NewPointView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCancelClickHandler);
     const availableOffersElement = this.element.querySelector('.event__available-offers');
     if (availableOffersElement) {
       availableOffersElement.addEventListener('change', this.#offersChangeHandler);
@@ -228,6 +204,7 @@ export default class NewPointView extends AbstractStatefulView {
       resetBtnElement.addEventListener('click', this.#formCancelClickHandler);
     } else {
       resetBtnElement.addEventListener('click', this.#formDeleteClickHandler);
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCancelClickHandler);
     }
     this.#setDatepicker();
   }
@@ -304,6 +281,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateFrom,
+        [timePickerFormat]: true,
         maxDate:this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       });
@@ -313,6 +291,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateTo,
+        [timePickerFormat]: true,
         minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       });
