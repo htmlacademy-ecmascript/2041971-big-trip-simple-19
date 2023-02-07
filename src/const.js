@@ -10,9 +10,11 @@ const BLANK_POINT = {
 const DateFormat = {
   DATE_FORMAT: 'MMM D',
   TIME_FORMAT: 'HH:mm',
-  FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
-  DATEPICKER_FORMAT: 'y/m/d H:i',
+  FORM_DATE_FORMAT: 'DD/MM/YY hh:mm',
+  DATEPICKER_FORMAT: 'd/m/y H:i',
 };
+
+const timePickerFormat = 'time_24hr';
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -22,9 +24,6 @@ const FilterType = {
 const SortType = {
   DATE: 'date',
   PRICE: 'price',
-  EVENT: 'event',
-  TIME: 'time',
-  OFFERS: 'offers',
 };
 
 const UserAction = {
@@ -73,6 +72,7 @@ const EventsMessage = {
 export {
   BLANK_POINT,
   DateFormat,
+  timePickerFormat,
   FilterType,
   SortType,
   UserAction,

@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {BLANK_POINT, DateFormat} from '../const.js';
+import {BLANK_POINT, DateFormat, timePickerFormat} from '../const.js';
 import {humanizePointDate} from '../utils/point.js';
 import flatpickr from 'flatpickr';
 
@@ -83,7 +83,7 @@ function getRollupButton(id) {
 const createEventTypeListTemplate = (offersModel, currentType, isDisabled) => {
   const eventTypeListTemplate = offersModel.map(({type}) => `
     <div class="event__type-item" ${isDisabled ? 'disabled' : ''}>
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}"
       ${currentType === type ? 'checked' : ''}>
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>
@@ -281,6 +281,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateFrom,
+        [timePickerFormat]: true,
         maxDate:this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       });
@@ -290,6 +291,7 @@ export default class NewPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: DateFormat.DATEPICKER_FORMAT,
         defaultDate: this._state.dateTo,
+        [timePickerFormat]: true,
         minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       });
